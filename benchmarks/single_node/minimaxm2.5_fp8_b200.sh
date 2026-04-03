@@ -39,14 +39,17 @@ fi
 # Start GPU monitoring (power, temperature, clocks every second)
 start_gpu_monitor
 
+
 set -x
 vllm serve $MODEL --port $PORT \
 --tensor-parallel-size=$TP \
 $EP \
---gpu-memory-utilization 0.95 \
+--gpu-memory-utilization 0.90 \
 --max-model-len $MAX_MODEL_LEN \
 --block-size=32 \
 --kv-cache-dtype fp8 \
+--max-cudagraph-capture-size 2048 \
+--max-num-batched-tokens "$((ISL * 2))" \ 
 --stream-interval 20 --no-enable-prefix-caching \
 --trust-remote-code > $SERVER_LOG 2>&1 &
 
